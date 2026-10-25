@@ -1,0 +1,60 @@
+rules:
+  - id: aoma.formatted-sql-query
+    languages: [python]
+    severity: ERROR
+    message: "SQL query built by string formatting/concatenation and passed to execute() — use parameterized queries."
+    pattern-either:
+      - pattern: $X.execute("..." % $Y)
+      - pattern: $X.execute("..." + $Y)
+      - pattern: $X.execute(f"...")
+      - pattern: $X.execute($S.format(...))
+      - pattern: $X.executemany("..." % $Y)
+      - pattern: $X.executemany(f"...")
+  - id: aoma.hardcoded-secret
+    languages: [python]
+    severity: ERROR
+    message: "Hardcoded secret assigned in source code — move it to an environment variable or secrets manager."
+    patterns:
+      - pattern: $NAME = "..."
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: (?i).*(password|passwd|secret|api[_-]?key|access[_-]?key|auth[_-]?token).*
+  - id: aoma.debug-enabled
+    languages: [python]
+    severity: WARNING
+    message: "Debug mode enabled in code — never ship debug=True to production."
+    pattern-either:
+      - pattern: $APP.run(..., debug=True, ...)
+      - patterns:
+          - pattern: $NAME = True
+          - metavariable-regex:
+              metavariable: $NAME
+              regex: (?i).*debug.*
+  - id: aoma.eval-exec
+    languages: [python]
+    severity: ERROR
+    message: "eval()/exec() executes arbitrary code — remove it or replace with a safe parser."
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: exec(...)
+
+  - id: aoma.sql-string-build
+    languages: [python]
+    severity: ERROR
+    message: "SQL statement assembled by string formatting — build queries with parameters instead."
+    pattern-either:
+      - patterns:
+          - pattern: $Q = $S % $Y
+          - metavariable-regex:
+              metavariable: $S
+              regex: (?i).*(select|insert into|update|delete from).* 
+      - patterns:
+          - pattern: $Q = $S.format(...)
+          - metavariable-regex:
+              metavariable: $S
+              regex: (?i).*(select|insert into|update|delete from).*
+      - patterns:
+          - pattern: $Q = f"..."
+          - metavariable-regex:
+              metavariable: $Q
+              regex: (?i).*(query|sql).*
