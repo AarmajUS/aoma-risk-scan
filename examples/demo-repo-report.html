@@ -16,7 +16,9 @@ td,th{padding:8px;border-bottom:1px solid rgba(255,255,255,.12);text-align:left;
 .medium{background:#713f12;color:#fde68a} .low{background:#1f2937;color:#d1d5db}
 .box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px;margin-top:22px;font-size:13.5px;line-height:1.65;color:#c7d2fe}
 footer{margin-top:26px;color:#9fb0d8;font-size:12.5px;line-height:1.7}
-</style></head><body><div class="wrap">
+</style><link rel="icon" type="image/png" sizes="64x64" href="../favicon-64.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+</head><body><div class="wrap">
 <h1>Aoma Risk Scan</h1>
 <p class="sub">Repository: <b>aoma-scan-demo</b> · Read-only scan · Prototype report v0.1</p>
 <div class="score"><div class="big">11</div><div>
@@ -37,4 +39,38 @@ the Risk Score, and this report.<br><br>
 tree. Scan copies are deleted on a written clock after delivery. We never
 train models on client code.</div>
 <footer>Aoma AI Agency · AARMAJ LLC, Ewing NJ · (609) 745-1580 · Prototype — scoring weights v1, under calibration.</footer>
-</div></body></html>
+</div><script>
+/*aoma-fav-anim: the website globe's own animation, drawn into the tab icon*/
+(function(){try{
+if(window.__aomaFavAnim)return;window.__aomaFavAnim=1;
+var S=64,cv=document.createElement('canvas');cv.width=S;cv.height=S;var ctx=cv.getContext('2d');
+var link=document.querySelector('link[rel="icon"]');if(!link){link=document.createElement('link');link.rel='icon';document.head.appendChild(link);}link.type='image/png';
+function pal(t){var c1=[56,189,248],c2=[167,139,250],c3=[52,245,163],a,b,u;if(t<.5){a=c1;b=c2;u=t*2;}else{a=c2;b=c3;u=(t-.5)*2;}return[Math.round(a[0]+(b[0]-a[0])*u),Math.round(a[1]+(b[1]-a[1])*u),Math.round(a[2]+(b[2]-a[2])*u)];}
+var N=110,GA=Math.PI*(3-Math.sqrt(5)),pts=[],j;
+for(j=0;j<N;j++){var y=1-(j/(N-1))*2,r=Math.sqrt(Math.max(0,1-y*y)),th=GA*j;pts.push({x:Math.cos(th)*r,y:y,z:Math.sin(th)*r,t:(y+1)/2});}
+function draw(t){
+  var cx=32,cy=32,R=10.4,FL=3.4;
+  ctx.fillStyle='#050b18';ctx.fillRect(0,0,S,S);
+  function proj(x,y,z){var s=FL/(FL+z);return[cx+x*s*R,cy+y*s*R,s];}
+  function rot(x,y,z,ry,rx){var c=Math.cos(ry),s=Math.sin(ry),x1=x*c-z*s,z1=x*s+z*c;var c2=Math.cos(rx),s2=Math.sin(rx),y1=y*c2-z1*s2,z2=y*s2+z1*c2;return[x1,y1,z2];}
+  var ry=t*.9,rx=.4;
+  var g=ctx.createRadialGradient(cx,cy,0,cx,cy,R*1.6);g.addColorStop(0,'rgba(140,220,255,.35)');g.addColorStop(1,'rgba(80,150,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R*1.6,0,7);ctx.fill();
+  var d=[];pts.forEach(function(p){var v=rot(p.x,p.y,p.z,ry,rx);var pr=proj(v[0],v[1],v[2]);d.push({x:pr[0],y:pr[1],s:pr[2],z:v[2],t:p.t});});
+  d.sort(function(a,b){return b.z-a.z;});
+  d.forEach(function(p){var dep=(p.s-.72)/.55;var col=pal(p.t);ctx.fillStyle='rgba('+col[0]+','+col[1]+','+col[2]+','+(.18+Math.max(0,dep)*.62)+')';ctx.beginPath();ctx.arc(p.x,p.y,Math.max(.56,.72+Math.max(0,dep)*.88),0,7);ctx.fill();});
+  ctx.strokeStyle='rgba(125,180,255,.4)';ctx.lineWidth=.8;ctx.beginPath();
+  for(var k=0;k<=60;k++){var an=k/60*Math.PI*2;var v2=rot(Math.cos(an)*1.5,Math.sin(an)*1.5*Math.sin(.95),Math.sin(an)*1.5*Math.cos(.95),ry*.9,rx*.8);var pr2=proj(v2[0],v2[1],v2[2]);if(k===0)ctx.moveTo(pr2[0],pr2[1]);else ctx.lineTo(pr2[0],pr2[1]);}
+  ctx.stroke();
+  var sa=t*1.4;var sv=rot(Math.cos(sa)*1.5,Math.sin(sa)*1.5*Math.sin(.95),Math.sin(sa)*1.5*Math.cos(.95),ry*.9,rx*.8);var sp=proj(sv[0],sv[1],sv[2]);
+  ctx.fillStyle='rgba(52,245,163,.95)';ctx.shadowColor='rgba(52,245,163,1)';ctx.shadowBlur=4.8;ctx.beginPath();ctx.arc(sp[0],sp[1],1.76,0,7);ctx.fill();ctx.shadowBlur=0;
+  link.href=cv.toDataURL('image/png');
+}
+draw(.6);
+var reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(reduced)return;
+var t0=performance.now();
+setInterval(function(){if(document.hidden||window.__orbHold)return;draw((performance.now()-t0)/1000+.6);},100);
+}catch(e){}})();
+
+</script>
+</body></html>
